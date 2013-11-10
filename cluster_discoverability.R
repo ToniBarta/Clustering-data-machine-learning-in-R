@@ -187,6 +187,10 @@ intra_times_3dMatrix = getInfoBasedOnVariables(intra_times)
     }
   }	
 
+user3DMatrix[1, ,]
+numberMatrix <- user3DMatrix[ 1 , rowSums(abs(user3DMatrix[1 , ,]))>0 & rowSums(abs(user3DMatrix[1 , ,]))>0,  ]
+plot(numberMatrix)
+  
 
 
 # ordered_intra = intra_times[with(intra_times, order(user_id)), ] 
@@ -326,7 +330,7 @@ intra_times_3dMatrix = getInfoBasedOnVariables(intra_times)
 # library(cluster
 
 # clusplot(intra_times, fit$cluster, color=TRUE, shade=TRUE, 
-  	 labels=2, lines=0)
+#   	 labels=2, lines=0)
 # 
 # # Centroid Plot against 1st 2 discriminant functions
 # library(fpc)
