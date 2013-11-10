@@ -1,4 +1,4 @@
-library(RPostgreSQL)
+ library(RPostgreSQL)
 library(hash)
 
 drv <- dbDriver("PostgreSQL")
@@ -107,32 +107,155 @@ intra_temperatures = dbGetQuery(con, "SELECT DISTINCT iw.user_id, w.row_number,
   
 plot(intra_temperatures[3:2])
   
-orderd_intra = intra_times[with(intra_times, order(case)), ] 
-j = 1
-intra_times_3dMatrix = array(0, dim=c(8,200,2))
- rowCount = 1
-for (i in 1:(nrow(orderd_intra) - 1)){
+  
+  
+#  FUNCTION TO RETURN A 3d MATRIX BASED ON VARIABLE
+getInfoBasedOnVariables <- function(intra_matrix){
 
-    if (orderd_intra$case[i] == orderd_intra$case[i+1]){
-    
-	intra_times_3dMatrix[rowCount, j, 1] = orderd_intra[["user_id"]][i]
-	intra_times_3dMatrix[rowCount, j, 2] = orderd_intra[["discoverability"]][i]	
-	j = j + 1
-     }
-     else{
-       intra_times_3dMatrix[rowCount, j, 1] = orderd_intra[["user_id"]][i]
-       intra_times_3dMatrix[rowCount, j, 2] = orderd_intra[["discoverability"]][i]	
-       rowCount = rowCount + 1
-       j = 1
-     }
-  if (i == (nrow(orderd_intra) - 1)){
-    intra_times_3dMatrix[rowCount,j,1] = orderd_intra[["user_id"]][i + 1]
-    intra_times_3dMatrix[rowCount,j,2] = orderd_intra[["discoverability"]][i + 1]
-  }
-}	
+  ordered_intra = intra_matrix[with(intra_matrix, order(case)), ] 
+  j = 1
+  intra_3dMatrix = array(0, dim=c(8,200,2))
+  rowCount = 1
+
+  for (i in 1:(nrow(ordered_intra) - 1)){
+
+      if (ordered_intra$case[i] == ordered_intra$case[i+1]){
+      
+	  intra_3dMatrix[rowCount, j, 1] = ordered_intra[["user_id"]][i]
+	  intra_3dMatrix[rowCount, j, 2] = ordered_intra[["discoverability"]][i]	
+	  j = j + 1
+      }
+      else{
+	intra_3dMatrix[rowCount, j, 1] = ordered_intra[["user_id"]][i]
+	intra_3dMatrix[rowCount, j, 2] = ordered_intra[["discoverability"]][i]	
+	rowCount = rowCount + 1
+	j = 1
+      }
+    if (i == (nrow(ordered_intra) - 1)){
+      intra_3dMatrix[rowCount,j,1] = ordered_intra[["user_id"]][i + 1]
+      intra_3dMatrix[rowCount,j,2] = ordered_intra[["discoverability"]][i + 1]
+    }
+  }	
+
+  return(intra_3dMatrix)
+}  
+#  END OF FUNCTION
+  
+intra_times_3dMatrix = getInfoBasedOnVariables(intra_times)
+
 
 # to get rid of the 0's from the matrixs
-numberMatrix <- intra_times_3dMatrix[ , rowSums(abs(intra_times_3dMatrix[, ,]))>0 & rowSums(abs(intra_times_3dMatrix[, ,]))>0,  ]
+# numberMatrix <- intra_3dMatrix[ , rowSums(abs(intra_3dMatrix[, ,]))>0 & rowSums(abs(intra_3dMatrix[, ,]))>0,  ]
+
+
+  ordered_intra = intra_times[with(intra_times, order(user_id)), ] 
+  j = 1
+  userIdArray = array(0, 500)
+  user3DMatrix = array(0, dim=c(400,20,2) )
+  count = 1
+  arrayCount = 1
+
+  for (i in 1:(nrow(ordered_intra) - 1)){
+
+      if ( i == 1){
+	userIdArray[arrayCount] = ordered_intra[["user_id"]][i]
+	arrayCount = arrayCount + 1
+      }
+  
+      if (ordered_intra$user_id[i] == ordered_intra$user_id[i+1]){
+		 
+	  user3DMatrix[count, j, 1] = ordered_intra[["case"]][i]
+	  user3DMatrix[count, j, 2] = ordered_intra[["discoverability"]][i]
+	  j = j + 1
+      }
+      else{
+        if (i != 1) {
+	  userIdArray[arrayCount] = ordered_intra[["user_id"]][i + 1]
+	  arrayCount = arrayCount + 1
+        }
+
+        user3DMatrix[count, j, 1] = ordered_intra[["case"]][i]
+        user3DMatrix[count, j, 2] = ordered_intra[["discoverability"]][i]
+        count = count + 1
+        j = 1
+      
+      }
+      
+    if (i == (nrow(ordered_intra) - 1)){
+      user3DMatrix[count,j,1] = ordered_intra[["case"]][i + 1]
+      user3DMatrix[count,j,2] = ordered_intra[["discoverability"]][i + 1]
+    }
+  }	
+
+
+
+# ordered_intra = intra_times[with(intra_times, order(user_id)), ] 
+# userIdArray = array(0, 500)
+# user3DMatrix = array(0, dim=c(400,20,2) )
+# count = 1
+# variable_count = 1
+# 
+# for (i in 1:nrow(ordered_intra)){
+# 
+#   if (ordered_intra[["user_id"]][i] != 0) {
+#   
+#     user_id = ordered_intra[["user_id"]][i]
+#     ordered_intra[["user_id"]][i] = 0
+#     
+#     userIdArray[count] = user_id
+#     
+#     user3DMatrix[count, variable_count, 1] = ordered_intra[["case"]][i]
+#     user3DMatrix[count, variable_count, 2] = ordered_intra[["discoverability"]][i]
+#     variable_count = variable_count + 1
+#     
+#     count = count + 1
+#     
+#     for (j in i:nrow(ordered_intra)){
+#     
+#       
+#         if (user_id == ordered_intra[["user_id"]][j]){
+# 	  user3DMatrix[count, variable_count, 1] = ordered_intra[["case"]][j]
+#           user3DMatrix[count, variable_count, 2] = ordered_intra[["discoverability"]][j]
+#           ordered_intra[["user_id"]][j] = 0
+#           variable_count = variable_count + 1
+#         }
+#       
+#     }
+#     variable_count = 1
+#   } 
+# }
+# 
+# 
+# 
+# 
+# ordered_intra = intra_times[with(intra_times, order(case)), ] 
+# userMatrix <- matrix(0, nrow= 700, ncol= 1000)
+# count = 1
+# for (i in 1:nrow(ordered_intra)){
+# 
+#   if (ordered_intra[["user_id"]][i] != 0){
+#     userMatrix[i,count] = ordered_intra[["user_id"]][i]
+#     count = count + 1
+#     userMatrix[i,count] = ordered_intra[["case"]][i]
+#     count = count + 1
+#     userMatrix[i,count] = ordered_intra[["discoverability"]][i]
+#     count = count + 1   
+#   }
+#   if (ordered_intra[["user_id"]][i] != 0){
+#     for ( j in i:nrow(ordered_intra)){
+#       
+#       if (ordered_intra[["user_id"]][i] == ordered_intra[["user_id"]][j]){
+#         userMatrix[i,count] = ordered_intra[["case"]][j]
+#         count = count + 1
+#         userMatrix[i,count] = ordered_intra[["discoverability"]][j]
+#         count = count + 1
+#         ordered_intra[["user_id"]][j] = 0
+#       }  
+#     }
+#   }
+#   count = 1
+# }	
+# 
 
 
 
