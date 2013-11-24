@@ -2,4 +2,8 @@
 
 myarg <- commandArgs()
 
-print (myargs)
+print (myarg)
+
+
+
+

@@ -226,52 +226,58 @@ plot(da, col=cl$cluster)
 require(graphics)
 points(cl$centers, col = 1:5, pch = 8)
 
-  da <- intra_months[3:2]
-  cl <- kmeans(da, 33, iter.max = 2, nstart = 1)
-  plot(da, col=cl$cluster)
-  require(graphics)
-  points(cl$centers, col = 1:5, pch = 8)
-
-# END K MEANS CLUSTRING
 
 
-
+da <- intra_months[3:2]
+cl <- kmeans(da, 33, iter.max = 2, nstart = 1)
+plot(da, col=cl$cluster)
 require(graphics)
 points(cl$centers, col = 1:5, pch = 8)
 
+# END K MEANS CLUSTRING	
 
-# a 2-dimensional example
-x <- rbind(matrix(rnorm(100, sd = 0.3), ncol = 2),
-           matrix(rnorm(100, mean = 1, sd = 0.3), ncol = 2))
-colnames(x) <- c("x", "y")
-(cl <- kmeans(x, 2))
-plot(x, col = cl$cluster)
-points(cl$centers, col = 1:2, pch = 8, cex = 2)
 
-# sum of squares
-ss <- function(x) sum(scale(x, scale = FALSE)^2)
+kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start){
+  da <- intra_matrix[3:2]
+  cl <- kmeans(da, nr_clusters, iter.max = nr_iterations, nstart = nr_start)
+  plot(da, col=cl$cluster)
+  require(graphics)
+  points(cl$centers, col = 1:15, pch = 8)
+    
+  return(cl)
+}
 
-# cluster centers "fitted" to each obs.:
-fitted.x <- fitted(cl);  head(fitted.x)
-resid.x <- x - fitted(cl)
+intra_times_cluster = kmeansClustering(intra_times, 24, 50, 50)	
+intra_days_cluster = kmeansClustering(intra_days, 10, 50, 50)
+intra_months_cluster = kmeansClustering(intra_months, 20, 50, 50)
 
-# Equalities : ----------------------------------
-cbind(cl[c("betweenss", "tot.withinss", "totss")], # the same two columns
-         c(ss(fitted.x), ss(resid.x),    ss(x)))
-stopifnot(all.equal(cl$ totss,        ss(x)),
-	  all.equal(cl$ tot.withinss, ss(resid.x)),
-	  # these three are the same:
-	  all.equal(cl$ betweenss,    ss(fitted.x)),
-	  all.equal(cl$ betweenss, cl$totss - cl$tot.withinss),
-	  # and hence also
-	  all.equal(ss(x), ss(fitted.x) + ss(resid.x))
-	  )
+intra_weathers_cluster = kmeansClustering(intra_weathers, 10, 100, 100)
+  
+# GETTING the users that are in the same cluster  
 
-kmeans(x,1)$withinss # trivial one-cluster, (its W.SS == ss(x))
+getUsersFromTheSameCluster <- function(intra_matrix, intra_cluster){
 
-# random starts do help here with too many clusters
-# (and are often recommended anyway!):
-(cl <- kmeans(x, 5, nstart = 25))
-plot(x, col = cl$cluster)
-points(cl$centers, col = 1:5, pch = 8)
+  cluster_user_matrix <- matrix(0, 60, 130)
+
+  for ( i in 1:(nrow(intra_matrix))){
+    j = 1
+    while (cluster_user_matrix[intra_cluster$cluster[i], j] != 0 )
+    {
+      j = j + 1
+    }
+    cluster_user_matrix[intra_cluster$cluster[i] , j] = intra_matrix[["user_id"]][i]
+  }
+  return (cluster_user_matrix)
+}
+# &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+cluster_user_matrix_intra_times = getUsersFromTheSameCluster(intra_times, intra_times_cluster)
+cluster_user_matrix_intra_times[1 , ]
+cluster_user_matrix_intra_times[3 , ]
+
+
+
+
+
+
 
