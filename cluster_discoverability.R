@@ -37,7 +37,7 @@ intra_times = dbGetQuery(con,"select distinct user_id,
 # dada = as.matrix(da)
 
 plot(intra_times[3:2])
-
+colnames(intra_times) <- c("user_id", "row_number", "discoverability")
 
 # THIS DATA IS FOR INTRA_DAY_OF_WEEKS	
 intra_days = dbGetQuery(con,"select distinct user_id, 
@@ -54,6 +54,7 @@ intra_days = dbGetQuery(con,"select distinct user_id,
 		  (1 - new_song_skipped*1.0/songs_skipped) AS discoverability from intra_day_of_weeks where songs_skipped != 0")
 		  
 plot(intra_days[3:2])
+colnames(intra_days) <- c("user_id", "row_number", "discoverability")
 
 # THIS DATA IS FOR INTRA_MONTHS
 intra_months = dbGetQuery(con,"select distinct user_id, 
@@ -75,7 +76,7 @@ intra_months = dbGetQuery(con,"select distinct user_id,
 		  (1 - new_song_skipped*1.0/songs_skipped) AS discoverability from intra_months where songs_skipped != 0")
 		  
 plot(intra_months[3:2])
-
+colnames(intra_months) <- c("user_id", "row_number", "discoverability")
 
 # THIS DATA IS FOR INTRA_WEATHER
 intra_weathers = dbGetQuery(con, "SELECT DISTINCT iw.user_id, w.row_number, 
@@ -106,18 +107,17 @@ intra_temperatures = dbGetQuery(con, "SELECT DISTINCT iw.user_id, w.row_number,
   
 plot(intra_temperatures[3:2])
   
-  
-  
+   
 #  @@@@@@@@@@@@@ FUNCTION TO RETURN A 3d MATRIX BASED ON VARIABLE @@@@@@@@@@@@@@@@
 getInfoBasedOnVariables <- function(intra_matrix){
 
-  ordered_intra = intra_matrix[with(intra_matrix, order(case)), ] 
+  ordered_intra = intra_matrix[with(intra_matrix, order(row_number)), ] 
   j = 1
   intra_3dMatrix = array(0, dim=c(8,200,2))
   rowCount = 1
 
   for (i in 1:(nrow(ordered_intra) - 1)){
-      if (ordered_intra$case[i] == ordered_intra$case[i+1]){
+      if (ordered_intra$row_number[i] == ordered_intra$row_number[i+1]){
       
 	  intra_3dMatrix[rowCount, j, 1] = ordered_intra[["user_id"]][i]
 	  intra_3dMatrix[rowCount, j, 2] = ordered_intra[["discoverability"]][i]	
@@ -149,6 +149,7 @@ getInfoBasedOnUsers <- function(intra_matrix){
 
   ordered_intra = intra_matrix[with(intra_matrix, order(user_id)), ] 
 
+# TODO set up  the actual array size 
   userIdArray <<- array(0, 500)
   user3DMatrix = array(0, dim=c(400,20,2) )
   
@@ -162,7 +163,7 @@ getInfoBasedOnUsers <- function(intra_matrix){
 	arrayCount = arrayCount + 1
       }
       if (ordered_intra$user_id[i] == ordered_intra$user_id[i+1]){	 
-	  user3DMatrix[count, j, 1] = ordered_intra[["case"]][i]
+	  user3DMatrix[count, j, 1] = ordered_intra[["row_number"]][i]
 	  user3DMatrix[count, j, 2] = ordered_intra[["discoverability"]][i]
 	  j = j + 1
       }
@@ -171,103 +172,106 @@ getInfoBasedOnUsers <- function(intra_matrix){
 	  userIdArray[arrayCount] <<- ordered_intra[["user_id"]][i + 1]
 	  arrayCount = arrayCount + 1
         }
-        user3DMatrix[count, j, 1] = ordered_intra[["case"]][i]
+        user3DMatrix[count, j, 1] = ordered_intra[["row_number"]][i]
         user3DMatrix[count, j, 2] = ordered_intra[["discoverability"]][i]
         count = count + 1
         j = 1
       }
     if (i == (nrow(ordered_intra) - 1)){
-      user3DMatrix[count,j,1] = ordered_intra[["case"]][i + 1]
+      user3DMatrix[count,j,1] = ordered_intra[["row_number"]][i + 1]
       user3DMatrix[count,j,2] = ordered_intra[["discoverability"]][i + 1]
     }
-  }	
+  }	 	
   return(user3DMatrix)   
 }
 # @@@@@@@@@@@@@@@@@@@@@@@@@@ END OF FUNCTION @@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 intra_times_user_3dMatrix = getInfoBasedOnUsers(intra_times)
+intra_times_userID = userIdArray
 
 intra_days_user_3dMatrix = getInfoBasedOnUsers(intra_days)
+intra_days_userID = userIdArray
+
+intra_months_user_3dMatrix = getInfoBasedOnUsers(intra_months)
+intra_months_userID = userIdArray
+
+intra_weathers_user_3dMatrix = getInfoBasedOnUsers(intra_weathers)
+intra_weathers_userID = userIdArray
+
+intra_locations_user_3dMatrix = getInfoBasedOnUsers(intra_locations) 
+intra_locations_userID = userIdArray
+
+intra_temperatures_user_3dMatrix = getInfoBasedOnUsers(intra_temperatures)
+intra_temperatures_userID = userIdArray
+
+
+
 
 user3DMatrix[1, ,]  
 numberMatrix <- user3DMatrix[ 1 , rowSums(abs(user3DMatrix[1 , ,]))>0 & rowSums(abs(user3DMatrix[1 , ,]))>0,  ]
 plot(numberMatrix)
   
-  
+numberMatrix <- intra_times_user_3dMatrix[ 1 , rowSums(abs(intra_times_user_3dMatrix[1 , ,]))>0 & rowSums(abs(intra_times_user_3dMatrix[1 , ,]))>0,  ]
+
 numberMatrix <- intra_days_user_3dMatrix[ 3 , rowSums(abs(intra_days_user_3dMatrix[3 , ,]))>0 & rowSums(abs(intra_days_user_3dMatrix[3 , ,]))>0,  ]
 
 
-# library(mclust)
-# # Run the function to see how many clusters
-# # it finds to be optimal, set it to search for
-# # at least 1 model and up 20.
-# d_clust <- Mclust(as.matrix(intra_times), G=1:40)
-# m.best <- dim(d_clust$z)[2]
-# cat("model-based optimal number of clusters:", m.best, "\n")
-# # 4 clusters
-# plot(d_clust)
-# 
-# 
-# 
-# fit <- cascadeKM(scale(intra_times, center = TRUE,  scale = TRUE), 1, 20, iter = 5000)
-# plot(fit, sortg = TRUE, grpmts.plot = TRUE)
-# calinski.best <- as.numeric(which.max(fit$results[2,]))
-# cat("Calinski criterion optimal number of clusters:", calinski.best, "\n")
-# # 5 clusters!
-# 
-# 
-# mydata <- scale(mydata) # standardize variables
-# 
-# # Determine number of clusters
-# wss <- (nrow(intra_times)-1)*sum(apply(intra_times,2,var))
-# for (i in 2:30) wss[i] <- sum(kmeans(intra_times, 
-#   	 centers=i)$withinss)
-# plot(1:30, wss, type="b", xlab="Number of Clusters",
-#   ylab="Within groups sum of squares")
-# 
-# 
-#   
-#  library(fpc)
-# pamk.best <- pamk(intra_times)
-# cat("number of clusters estimated by optimum average silhouette width:", pamk.best$nc, "\n")
-# plot(pam(intra_times, pamk.best$nc))
 
 
-# # Determine number of clusters
-# wss <- (nrow(mydata)-1)*sum(apply(mydata,2,var))
-# for (i in 2:15) wss[i] <- sum(kmeans(mydata, 
-#   	 centers=i)$withinss)
-# plot(1:15, wss, type="b", xlab="Number of Clusters",
-#   ylab="Within groups sum of squares")
-#   
-#   
-#   # K-Means Cluster Analysis
-# fit <- kmeans(mydata, 5) # 5 cluster solution
-# # get cluster means 
-# aggregate(mydata,by=list(fit$cluster),FUN=mean)
-# # append cluster assignment
-# mydata <- data.frame(mydata, fit$cluster)
-# 
-# 
-# 
-# 
-# 
-# # K-Means Clustering with 5 clusters
-# fit <- kmeans(mydata, 5)
-# 
-# # Cluster Plot against 1st 2 principal components
-# 	
-# # vary parameters for most readable graph
-# library(cluster
+# USING K MEANS CLUSTERING
+da <- intra_times[3:2]
+cl <- kmeans(da, 24, iter.max = 20, nstart = 50)
+plot(da, col=cl$cluster)
+require(graphics)
+points(cl$centers, col = 1:5, pch = 8)
 
-# clusplot(intra_times, fit$cluster, color=TRUE, shade=TRUE, 
-#   	 labels=2, lines=0)
-# 
-# # Centroid Plot against 1st 2 discriminant functions
-# library(fpc)
-# plotcluster(mydata, fit$cluster)
-# 
-# 
-# 
-# with(intra_months, plot(discoverability, case, col= user_id))
+  da <- intra_months[3:2]
+  cl <- kmeans(da, 33, iter.max = 2, nstart = 1)
+  plot(da, col=cl$cluster)
+  require(graphics)
+  points(cl$centers, col = 1:5, pch = 8)
+
+# END K MEANS CLUSTRING
+
+
+
+require(graphics)
+points(cl$centers, col = 1:5, pch = 8)
+
+
+# a 2-dimensional example
+x <- rbind(matrix(rnorm(100, sd = 0.3), ncol = 2),
+           matrix(rnorm(100, mean = 1, sd = 0.3), ncol = 2))
+colnames(x) <- c("x", "y")
+(cl <- kmeans(x, 2))
+plot(x, col = cl$cluster)
+points(cl$centers, col = 1:2, pch = 8, cex = 2)
+
+# sum of squares
+ss <- function(x) sum(scale(x, scale = FALSE)^2)
+
+# cluster centers "fitted" to each obs.:
+fitted.x <- fitted(cl);  head(fitted.x)
+resid.x <- x - fitted(cl)
+
+# Equalities : ----------------------------------
+cbind(cl[c("betweenss", "tot.withinss", "totss")], # the same two columns
+         c(ss(fitted.x), ss(resid.x),    ss(x)))
+stopifnot(all.equal(cl$ totss,        ss(x)),
+	  all.equal(cl$ tot.withinss, ss(resid.x)),
+	  # these three are the same:
+	  all.equal(cl$ betweenss,    ss(fitted.x)),
+	  all.equal(cl$ betweenss, cl$totss - cl$tot.withinss),
+	  # and hence also
+	  all.equal(ss(x), ss(fitted.x) + ss(resid.x))
+	  )
+
+kmeans(x,1)$withinss # trivial one-cluster, (its W.SS == ss(x))
+
+# random starts do help here with too many clusters
+# (and are often recommended anyway!):
+(cl <- kmeans(x, 5, nstart = 25))
+plot(x, col = cl$cluster)
+points(cl$centers, col = 1:5, pch = 8)
+
