@@ -17,8 +17,7 @@ summary(con)
 
 # fetch(rs,n=-1) ## return all elements
 
-dbListFields(con,"intra_time_of_days"
-)
+dbListFields(con,"intra_time_of_days")
 
 # THIS DATA IS FOR INTRA_TIME_OF_DAYS
 intra_times = dbGetQuery(con,"select distinct user_id, 
@@ -140,7 +139,6 @@ getInfoBasedOnVariables <- function(intra_matrix){
   
 intra_times_3dMatrix = getInfoBasedOnVariables(intra_times)
 
-
 # to get rid of the 0's from the matrixs
 # numberMatrix <- intra_3dMatrix[ , rowSums(abs(intra_3dMatrix[, ,]))>0 & rowSums(abs(intra_3dMatrix[, ,]))>0,  ]
 
@@ -207,7 +205,6 @@ intra_temperatures_userID = userIdArray
 
 
 
-
 user3DMatrix[1, ,]  
 numberMatrix <- user3DMatrix[ 1 , rowSums(abs(user3DMatrix[1 , ,]))>0 & rowSums(abs(user3DMatrix[1 , ,]))>0,  ]
 plot(numberMatrix)
@@ -217,16 +214,13 @@ numberMatrix <- intra_times_user_3dMatrix[ 1 , rowSums(abs(intra_times_user_3dMa
 numberMatrix <- intra_days_user_3dMatrix[ 3 , rowSums(abs(intra_days_user_3dMatrix[3 , ,]))>0 & rowSums(abs(intra_days_user_3dMatrix[3 , ,]))>0,  ]
 
 
-
-
 # USING K MEANS CLUSTERING
 da <- intra_times[3:2]
 cl <- kmeans(da, 24, iter.max = 20, nstart = 50)
 plot(da, col=cl$cluster)
 require(graphics)
 points(cl$centers, col = 1:5, pch = 8)
-
-
+ 
 
 da <- intra_months[3:2]
 cl <- kmeans(da, 33, iter.max = 2, nstart = 1)
@@ -251,12 +245,16 @@ intra_times_cluster = kmeansClustering(intra_times, 24, 50, 50)
 intra_days_cluster = kmeansClustering(intra_days, 10, 50, 50)
 intra_months_cluster = kmeansClustering(intra_months, 20, 50, 50)
 
+intra_locations_cluster = kmeansClustering(intra_locations, 50, 50, 50)
+
 intra_weathers_cluster = kmeansClustering(intra_weathers, 10, 100, 100)
+intra_temperatures_cluster = kmeansClustering(intra_temperatures, 50, 50 ,50)
   
 # GETTING the users that are in the same cluster  
 
 getUsersFromTheSameCluster <- function(intra_matrix, intra_cluster){
 
+# TODO think about a way to know about the size of the matrix.
   cluster_user_matrix <- matrix(0, 60, 130)
 
   for ( i in 1:(nrow(intra_matrix))){
