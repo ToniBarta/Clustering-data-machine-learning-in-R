@@ -37,7 +37,7 @@ intra_times = dbGetQuery(con,"select distinct user_id,
 
 plot(intra_times[3:2])
 colnames(intra_times) <- c("user_id", "row_number", "discoverability")
-
+  
 # THIS DATA IS FOR INTRA_DAY_OF_WEEKS	
 intra_days = dbGetQuery(con,"select distinct user_id, 
 				 case 
@@ -242,8 +242,8 @@ kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start)
 }
 
 intra_times_cluster = kmeansClustering(intra_times, 24, 50, 50)	
-intra_days_cluster = kmeansClustering(intra_days, 10, 50, 50)
-intra_months_cluster = kmeansClustering(intra_months, 20, 50, 50)
+intra_days_cluster = kmeansClustering(intra_days, 14, 50, 50)	
+intra_months_cluster = kmeansClustering(intra_months, 30, 50, 50)
 
 intra_locations_cluster = kmeansClustering(intra_locations, 50, 50, 50)
 
@@ -255,7 +255,7 @@ intra_temperatures_cluster = kmeansClustering(intra_temperatures, 50, 50 ,50)
 getUsersFromTheSameCluster <- function(intra_matrix, intra_cluster){
 
 # TODO think about a way to know about the size of the matrix.
-  cluster_user_matrix <- matrix(0, 60, 130)
+  cluster_user_matrix <- matrix(0, 500, 1000)
 
   for ( i in 1:(nrow(intra_matrix))){
     j = 1
@@ -270,12 +270,13 @@ getUsersFromTheSameCluster <- function(intra_matrix, intra_cluster){
 # &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 cluster_user_matrix_intra_times = getUsersFromTheSameCluster(intra_times, intra_times_cluster)
+cluster_user_matrix_intra_days = getUsersFromTheSameCluster(intra_days, intra_days_cluster)
 cluster_user_matrix_intra_times[1 , ]
 cluster_user_matrix_intra_times[3 , ]
 
 
-
-
-
+  
+  
+  
 
 
