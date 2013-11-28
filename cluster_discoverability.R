@@ -205,30 +205,30 @@ intra_temperatures_userID = userIdArray
 
 
 
-user3DMatrix[1, ,]  
-numberMatrix <- user3DMatrix[ 1 , rowSums(abs(user3DMatrix[1 , ,]))>0 & rowSums(abs(user3DMatrix[1 , ,]))>0,  ]
-plot(numberMatrix)
+# user3DMatrix[1, ,]  
+# numberMatrix <- user3DMatrix[ 1 , rowSums(abs(user3DMatrix[1 , ,]))>0 & rowSums(abs(user3DMatrix[1 , ,]))>0,  ]
+# plot(numberMatrix)
   
 numberMatrix <- intra_times_user_3dMatrix[ 1 , rowSums(abs(intra_times_user_3dMatrix[1 , ,]))>0 & rowSums(abs(intra_times_user_3dMatrix[1 , ,]))>0,  ]
 
 numberMatrix <- intra_days_user_3dMatrix[ 3 , rowSums(abs(intra_days_user_3dMatrix[3 , ,]))>0 & rowSums(abs(intra_days_user_3dMatrix[3 , ,]))>0,  ]
 
 
-# USING K MEANS CLUSTERING
-da <- intra_times[3:2]
-cl <- kmeans(da, 24, iter.max = 20, nstart = 50)
-plot(da, col=cl$cluster)
-require(graphics)
-points(cl$centers, col = 1:5, pch = 8)
- 
-
-da <- intra_months[3:2]
-cl <- kmeans(da, 33, iter.max = 2, nstart = 1)
-plot(da, col=cl$cluster)
-require(graphics)
-points(cl$centers, col = 1:5, pch = 8)
-
-# END K MEANS CLUSTRING	
+# # USING K MEANS CLUSTERING
+# da <- intra_times[3:2]
+# cl <- kmeans(da, 24, iter.max = 20, nstart = 50)
+# plot(da, col=cl$cluster)
+# require(graphics)
+# points(cl$centers, col = 1:5, pch = 8)
+#  
+# 
+# da <- intra_months[3:2]
+# cl <- kmeans(da, 33, iter.max = 2, nstart = 1)
+# plot(da, col=cl$cluster)
+# require(graphics)
+# points(cl$centers, col = 1:5, pch = 8)
+# 
+# # END K MEANS CLUSTRING	
 
 
 kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start){
