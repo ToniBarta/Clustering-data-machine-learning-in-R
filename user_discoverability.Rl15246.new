@@ -1,8 +1,19 @@
 # source("cluster_discoverability.R")
 
+# user_id = 21 
+# category { afternoon }	
+# {user_id: 35, context: {time_of_day: 4, day_of_week: 3, month: 8, city: X, temp: 10}}
 
+  
+# input_time_of_day = 5
+# input_day_of_week = 2
+# input_month = 10
+# input_city = 122
+# input_temperature = 17
+#   
+# input_user_id = 36
 
-#  @@@@@@@@@@@@@@@@@@@@@@@@ FUNCTION @@@@@@@@@@@@@@@@@@@@@@@@
+  #  @@@@@@@@@@@@@@@@@@@@@@@@ FUNCTION @@@@@@@@@@@@@@@@@@@@@@@@
 
 gettingNeighboursForEachCategory <- function(input_variable, intra_cluster, intra_variable, index){
 
@@ -15,7 +26,8 @@ gettingNeighboursForEachCategory <- function(input_variable, intra_cluster, intr
 	j = j + 1
       }
     }
-
+  # &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+    
     # getting the users for each cluster
     cluster_user_matrix = getUsersFromTheSameCluster(intra_variable, intra_cluster)
   
@@ -78,7 +90,7 @@ getNeighboursForAUser <- function(input){
 }  # END OF getNeighboursForAUser
 
 
-input = hash(user_id = 44, intra_times = 7, intra_days = 4, 
+input = hash(user_id = 721, intra_times = 7, intra_days = 1, 
              intra_months = 10, intra_locations = 125 ,intra_temperatures = 17)  
              
 output = hash(user_id = input$user_id, intra_times = c(0), intra_days = c(0), 
@@ -86,7 +98,7 @@ output = hash(user_id = input$user_id, intra_times = c(0), intra_days = c(0),
 
  getNeighboursForAUser(input)
 
- output	
+ output
   
 
 

@@ -1,4 +1,4 @@
- library(RPostgreSQL)
+library(RPostgreSQL)
 library(hash)
 
 drv <- dbDriver("PostgreSQL")
@@ -38,22 +38,6 @@ intra_times = dbGetQuery(con,"select distinct user_id,
 plot(intra_times[3:2])
 colnames(intra_times) <- c("user_id", "row_number", "discoverability")
   
-# THIS DATA IS FOR INTRA_DAY_OF_WEEKS	
-intra_days = dbGetQuery(con,"select distinct user_id, 
-				 case 
-				 when variable = 'monday' 		then 1
-				 when variable = 'tuesday'	 	then 2
-				 when variable = 'wednesday'		then 3
-				 when variable = 'thursday'		then 4
-				 when variable = 'friday'		then 5
-				 when variable = 'saturday'		then 6
-				 when variable = 'sunday'		then 7
-				
-			      end,
-		  (1 - new_song_skipped*1.0/songs_skipped) AS discoverability from intra_day_of_weeks where songs_skipped != 0")
-		  
-plot(intra_days[3:2])
-colnames(intra_days) <- c("user_id", "row_number", "discoverability")
 
 # THIS DATA IS FOR INTRA_MONTHS
 intra_months = dbGetQuery(con,"select distinct user_id, 
@@ -213,24 +197,7 @@ numberMatrix <- intra_times_user_3dMatrix[ 1 , rowSums(abs(intra_times_user_3dMa
 
 numberMatrix <- intra_days_user_3dMatrix[ 3 , rowSums(abs(intra_days_user_3dMatrix[3 , ,]))>0 & rowSums(abs(intra_days_user_3dMatrix[3 , ,]))>0,  ]
 
-
-# # USING K MEANS CLUSTERING
-# da <- intra_times[3:2]
-# cl <- kmeans(da, 24, iter.max = 20, nstart = 50)
-# plot(da, col=cl$cluster)
-# require(graphics)
-# points(cl$centers, col = 1:5, pch = 8)
-#  
-# 
-# da <- intra_months[3:2]
-# cl <- kmeans(da, 33, iter.max = 2, nstart = 1)
-# plot(da, col=cl$cluster)
-# require(graphics)
-# points(cl$centers, col = 1:5, pch = 8)
-# 
-# # END K MEANS CLUSTRING	
-
-
+	
 kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start){
   da <- intra_matrix[3:2]
   cl <- kmeans(da, nr_clusters, iter.max = nr_iterations, nstart = nr_start)
@@ -241,14 +208,14 @@ kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start)
   return(cl)
 }
 
-intra_times_cluster = kmeansClustering(intra_times, 24, 50, 50)	
-intra_days_cluster = kmeansClustering(intra_days, 14, 50, 50)	
-intra_months_cluster = kmeansClustering(intra_months, 30, 50, 50)
-
-intra_locations_cluster = kmeansClustering(intra_locations, 50, 50, 50)
-
-intra_weathers_cluster = kmeansClustering(intra_weathers, 10, 100, 100)
-intra_temperatures_cluster = kmeansClustering(intra_temperatures, 50, 50 ,50)
+# intra_times_cluster = kmeansClustering(intra_times, 24, 50, 50)	
+# intra_days_cluster = kmeansClustering(intra_days, 14, 50, 50)	
+# intra_months_cluster = kmeansClustering(intra_months, 30, 50, 50)
+# 
+# intra_locations_cluster = kmeansClustering(intra_locations, 50, 50, 50)
+# 
+# intra_weathers_cluster = kmeansClustering(intra_weathers, 10, 100, 100)
+# intra_temperatures_cluster = kmeansClustering(intra_temperatures, 50, 50 ,50)
   
 # GETTING the users that are in the same cluster  
 
