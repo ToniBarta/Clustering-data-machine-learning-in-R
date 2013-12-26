@@ -47,7 +47,28 @@ plot(intra_times[3:2])
 dev.off()
 
 colnames(intra_times) <- c("user_id", "row_number", "discoverability")
-  
+ 
+# THIS DATA IS FOR INTRA_DAY_OF_WEEKS
+intra_days = dbGetQuery(con,"select distinct user_id, 
+                                 case 
+                                 when variable = 'monday'                 then 1
+                                 when variable = 'tuesday'                then 2
+                                 when variable = 'wednesday'              then 3
+                                 when variable = 'thursday'               then 4	
+                                 when variable = 'friday'                 then 5
+                                 when variable = 'saturday'               then 6
+                                 when variable = 'sunday'                 then 7
+                                
+                              end,
+                  (1 - new_song_skipped*1.0/songs_skipped) AS discoverability from intra_day_of_weeks where songs_skipped != 0")
+                  
+
+pdf('intra_days.pdf')	
+plot(intra_days[3:2])	
+dev.off()
+
+colnames(intra_times) <- c("user_id", "row_number", "discoverability")  
+ 
 
 # THIS DATA IS FOR INTRA_MONTHS
 intra_months = dbGetQuery(con,"select distinct user_id, 

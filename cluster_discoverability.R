@@ -38,7 +38,24 @@ intra_times = dbGetQuery(con,"select distinct user_id,
 plot(intra_times[3:2])
 colnames(intra_times) <- c("user_id", "row_number", "discoverability")
   
-
+# THIS DATA IS FOR INTRA_DAY_OF_WEEKS
+intra_days = dbGetQuery(con,"select distinct user_id, 
+                                 case 
+                                 when variable = 'monday'                 then 1
+                                 when variable = 'tuesday'                then 2
+                                 when variable = 'wednesday'              then 3
+                                 when variable = 'thursday'               then 4	
+                                 when variable = 'friday'                 then 5
+                                 when variable = 'saturday'               then 6
+                                 when variable = 'sunday'                 then 7
+                                
+                              end,
+                  (1 - new_song_skipped*1.0/songs_skipped) AS discoverability from intra_day_of_weeks where songs_skipped != 0")
+                  
+plot(intra_days[3:2])
+colnames(intra_times) <- c("user_id", "row_number", "discoverability")  
+  
+  
 # THIS DATA IS FOR INTRA_MONTHS
 intra_months = dbGetQuery(con,"select distinct user_id, 
 				 case
@@ -201,13 +218,19 @@ numberMatrix <- intra_days_user_3dMatrix[ 3 , rowSums(abs(intra_days_user_3dMatr
 kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start){
   da <- intra_matrix[3:2]
   cl <- kmeans(da, nr_clusters, iter.max = nr_iterations, nstart = nr_start)
+  
+  
+  #pdf('intra_temperature_cluster')  
   plot(da, col=cl$cluster)
+ 
   require(graphics)
   points(cl$centers, col = 1:15, pch = 8)
-    
+  
+  #dev.off()
+  
   return(cl)
-}
-
+}			
+    
 # intra_times_cluster = kmeansClustering(intra_times, 24, 50, 50)	
 # intra_days_cluster = kmeansClustering(intra_days, 14, 50, 50)	
 # intra_months_cluster = kmeansClustering(intra_months, 30, 50, 50)
