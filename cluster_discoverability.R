@@ -23,7 +23,7 @@ dbListFields(con,"intra_time_of_days")
 intra_times = dbGetQuery(con,"select distinct user_id, 
 				 case 
 				 when variable = 'early morning' 	then 1
-				 when variable = 'morning'	 	then 2
+				 when variable = 'morning'	 	    then 2
 				 when variable = 'late morning'		then 3
 				 when variable = 'afternoon'		then 4
 				 when variable = 'late afternoon'	then 5
