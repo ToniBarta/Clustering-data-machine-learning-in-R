@@ -109,8 +109,8 @@ kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start)
 
 
 getUsersFromTheSameCluster <- function(intra_matrix, intra_cluster){
-  # TODO think about a way to know about the size of the matrix.
-  cluster_user_matrix <- matrix(0, 500, 1000)
+  
+  cluster_user_matrix <- matrix(0, nrow(intra_matrix), max(intra_cluster$size)
   
   for ( i in 1:(nrow(intra_matrix))){
     j = 1
@@ -175,11 +175,6 @@ gettingNeighboursForEachCategory <- function(input_variable, intra_cluster, intr
 
 getNeighboursForAUser <- function(input){
   
-  #   user = input$user_id
-  #   output = hash(user_id = user, intra_times = c(0), intra_days = c(0), intra_months = c(0), intra_locations = c(0),intra_temperatures = c(0))  
-  # 
-  #   print(output)
-  
   intra_times_cluster = kmeansClustering(intra_times, 24, 50, 50)    
   gettingNeighboursForEachCategory(input$intra_times, intra_times_cluster, intra_times, 1)
   
@@ -198,19 +193,38 @@ getNeighboursForAUser <- function(input){
 }  # END OF getNeighboursForAUser
 
 
+{
+user_id_input <- readline ("give user id: ")
 
-input = hash(user_id = 44, intra_times = 3, intra_days = 5, 
-             intra_months = 10, intra_locations = 316 ,intra_temperatures = 18)  
+intra_times_input <- readline("Give time of day from 1 - 8: ")
+
+intra_days_input <- readline("Give what day is it from 1 -7: ")
+
+intra_months_input <- readline("Give what month is it from 1-12: ")
+
+location <- readline("Give the location: ")
+
+intra_locations_input <- dbGetQuery(con, paste("SELECT row_number FROM intra_cities, 
+                      (SELECT row_number() OVER(ORDER BY city), city FROM locations GROUP BY city) c WHERE c.city =", "'",location,"'"," LIMIT 1 ", sep=""))
+# if we write a citi that is not in the database we make the input 0
+if (dim (intra_locations_input) == 0) intra_locations_input = 0
 
 
+intra_temperature_input <- readline("Give the temperature: ")
 
 
+input = hash(user_id = user_id_input, intra_times = intra_times_input, intra_days = intra_days_input, 
+            intra_months = intra_months_input, intra_locations = intra_locations_input ,intra_temperatures = intra_temperature_input)
+
+# input = hash(user_id = 44, intra_times = 3, intra_days = 5, 
+#             intra_months = 10, intra_locations = 316 ,intra_temperatures = 18)  
 
 
-
+output = hash(user_id = input$user_id, intra_times = c(0), intra_days = c(0), 
+              intra_months = c(0), intra_locations = c(0),intra_temperatures = c(0))  
 
 getNeighboursForAUser(input)
 
 output  
-
+}
 
