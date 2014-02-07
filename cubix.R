@@ -40,7 +40,7 @@ intra_days = dbGetQuery(con,"select distinct user_id,
                         (1 - new_song_skipped*1.0/songs_skipped) AS discoverability from intra_day_of_weeks where songs_skipped != 0")
 
 plot(intra_days[3:2])
-colnames(intra_times) <- c("user_id", "row_number", "discoverability")  
+colnames(intra_days) <- c("user_id", "row_number", "discoverability")  
 
 # THIS DATA IS FOR INTRA_MONTHS
 intra_months = dbGetQuery(con,"select distinct user_id, 

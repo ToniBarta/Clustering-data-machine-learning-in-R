@@ -148,7 +148,7 @@ kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start)
 getUsersFromTheSameCluster <- function(intra_matrix, intra_cluster){
 
 # TODO think about a way to know about the size of the matrix.
-  cluster_user_matrix <- matrix(0, 500, 1000)
+  cluster_user_matrix <- matrix(0, 500, 500)
 
   for ( i in 1:(nrow(intra_matrix))){
     j = 1
