@@ -169,6 +169,7 @@ z = 0
         }
       }
   #      if (i > 1)
+
   #        z[i] = z[i-1] + 0.01
   #      else
   #        z[i] = 4
@@ -178,8 +179,6 @@ z = 0
 plot3d(x, y, z , size=8, col = rainbow(150))
 
 output$intra_days
-
-
 
 
 

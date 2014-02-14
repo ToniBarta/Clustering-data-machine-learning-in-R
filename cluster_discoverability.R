@@ -119,19 +119,19 @@ getInfoBasedOnVariables <- function(intra_matrix){
   for (i in 1:(nrow(ordered_intra) - 1)){
     if (ordered_intra$row_number[i] == ordered_intra$row_number[i+1]){
       
-      intra_3dMatrix[rowCount, j, 1] = ordered_intra[["user_id"]][i]
-      intra_3dMatrix[rowCount, j, 2] = ordered_intra[["discoverability"]][i]	
+      intra_3dMatrix[ordered_intra$row_number[i], j, 1] = ordered_intra[["user_id"]][i]
+      intra_3dMatrix[ordered_intra$row_number[i], j, 2] = ordered_intra[["discoverability"]][i]	
       j = j + 1
     }
     else{
-      intra_3dMatrix[rowCount, j, 1] = ordered_intra[["user_id"]][i]
-      intra_3dMatrix[rowCount, j, 2] = ordered_intra[["discoverability"]][i]	
+      intra_3dMatrix[ordered_intra$row_number[i], j, 1] = ordered_intra[["user_id"]][i]
+      intra_3dMatrix[ordered_intra$row_number[i], j, 2] = ordered_intra[["discoverability"]][i]	
       rowCount = rowCount + 1
       j = 1
     }
     if (i == (nrow(ordered_intra) - 1)){
-      intra_3dMatrix[rowCount,j,1] = ordered_intra[["user_id"]][i + 1]
-      intra_3dMatrix[rowCount,j,2] = ordered_intra[["discoverability"]][i + 1]
+      intra_3dMatrix[ordered_intra$row_number[i],j,1] = ordered_intra[["user_id"]][i + 1]
+      intra_3dMatrix[ordered_intra$row_number[i],j,2] = ordered_intra[["discoverability"]][i + 1]
     }
   }	
   return(intra_3dMatrix)
