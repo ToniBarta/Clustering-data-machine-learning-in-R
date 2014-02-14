@@ -102,8 +102,8 @@ getXArrayAxis <- function(discoverabilityArray, startingIndex){
 xArrayAxis <<- c(0)
 getXArrayAxis(discoverability_times,1)
 getXArrayAxis(discoverability_days, length(discoverability_times) + 1)
-getXArrayAxis(discoverability_months, length(discoverability_days) + length(discoverability_times) + 1)
-getXArrayAxis(discoverability_locations, length(discoverability_months) +length(discoverability_days) + length(discoverability_times) + 1)
+getXArrayAxis(discoverability_months, length(discoverability_days) + 1)
+getXArrayAxis(discoverability_locations, length(discoverability_months) + 1)
 
 
 
@@ -120,9 +120,8 @@ getYArrayAxis <- function(userIDArray, startingIndex){
 yArrayAxis <<- c(0)
 getYArrayAxis(userID_times,1)
 getYArrayAxis(userID_days, length(userID_times) + 1)
-getYArrayAxis(userID_months, length(userID_days) + length(userID_times) + 1)
-getYArrayAxis(userID_locations, length(userID_months) + length(userID_days) + length(userID_times) + 1)
-
+getYArrayAxis(userID_months, length(userID_days) + 1)
+getYArrayAxis(userID_locations, length(userID_months) + 1)
 
 
 
