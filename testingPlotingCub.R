@@ -23,27 +23,18 @@ y <- rnorm(1000)
 z <- rnorm(1000) + atan2(x,y)
 plot3d(x, y, z, col=rainbow(1000))
 
-
-
-intra_times_cluster$cluster
-user_id = 41
-for ( i in 1: (nrow(intra_times)))
-{
-  if ( intra_times_cluster$cluster[i] == user_id)
-  { 
-    a = i
-  }
-}  
+ 
 
   
-          gettingTheDiscoverabilityAndUserIdArray <- function(ordered_intra){
+          gettingTheDiscoverabilityAndUserIdArray <- function(ordered_intra, input){
+            input = as.integer(input)
             userIDsArray <<- c(0)
             discoverabilityArray <<- c(0)
             indexPos = 1
             
             for (i in 1:(nrow(ordered_intra))){
               
-              if (ordered_intra$row_number[i] == 1)
+              if (ordered_intra$row_number[i] == input)
               {
                 userIDsArray[indexPos] <<- ordered_intra$user_id[i]
                 discoverabilityArray[indexPos] <<- ordered_intra$discoverability[i]
@@ -69,9 +60,10 @@ for ( i in 1: (nrow(intra_times)))
             }
         #  } # end of gettingIndexArray
 
+##### ****************** INTRA_TIMES ******************
 
 ordered_intra = intra_times[with(intra_times, order(row_number)), ]
-gettingTheDiscoverabilityAndUserIdArray(ordered_intra)
+gettingTheDiscoverabilityAndUserIdArray(ordered_intra, input$intra_times)
 #gettingIndexArray(userIDsArray, intra_times)
 
       indexArray <- c(0)
@@ -90,9 +82,13 @@ userIDsArray_intra_times = userIDsArray
 discoverabilityArray_intra_times = discoverabilityArray
 indexArray_intra_times = indexArray
 
+##### ****************** INTRA_TIMES ******************
+
+
+##### ****************** INTRA_DAYS ******************
 
 ordered_intra = intra_days[with(intra_days, order(row_number)), ] 
-gettingTheDiscoverabilityAndUserIdArray(ordered_intra)
+gettingTheDiscoverabilityAndUserIdArray(ordered_intra, input$intra_times)
 #gettingIndexArray(userIDsArray, intra_days)
 
       indexArray <- c(0)
@@ -107,23 +103,33 @@ gettingTheDiscoverabilityAndUserIdArray(ordered_intra)
         }
       }
   
+
 userIDsArray_intra_days = userIDsArray
 discoverabilityArray_intra_days = discoverabilityArray
 indexArray_intra_days = indexArray
 
+##### ****************** INTRA_DAYS ******************
+
+
+
 initialLengthOfIndexArray_intra_times = length(indexArray_intra_times)
+initialLengthOfIndexArray_intra_days = length(indexArray_intra_days)
 
-indexArray_total = c(0)
-indexLength = length(indexArray_intra_times)
-usersLength = length(userIDsArray_intra_times)
-discoverabilityLength = length(discoverabilityArray_intra_times)
-for (i in 1:(length(indexArray_intra_days))){
-  # puting the rest of the indexArray for example intra_days at the end of the intra_times
-  indexArray_intra_times[i + indexLength] = indexArray_intra_days[i] 
-  userIDsArray_intra_times[i + usersLength] = userIDsArray_intra_days[i]
-  discoverabilityArray_intra_times[i + discoverabilityLength] = discoverabilityArray_intra_days[i]
-}
 
+  # insertingAllusersAndDiscoverabilityInArrays <- function(){
+
+      indexLength = length(indexArray_intra_times)
+      usersLength = length(userIDsArray_intra_times)
+      discoverabilityLength = length(discoverabilityArray_intra_times)
+
+      for (i in 1:(length(indexArray_intra_days))){
+        # puting the rest of the indexArray for example intra_days at the end of the intra_times
+        indexArray_intra_times[i + indexLength] = indexArray_intra_days[i] 
+        userIDsArray_intra_times[i + usersLength] = userIDsArray_intra_days[i]
+        discoverabilityArray_intra_times[i + discoverabilityLength] = discoverabilityArray_intra_days[i]
+      }
+
+  # }
 
 # for intra_times  ->z x 10 
 # for intra_days   ->z x 100
@@ -131,6 +137,7 @@ for (i in 1:(length(indexArray_intra_days))){
 
 x = 0
 y = 0
+z = 0
 
 
       for (i in 1:(length(indexArray_intra_times))){
@@ -171,7 +178,6 @@ y = 0
 plot3d(x, y, z , size=8, col = rainbow(150))
 
 output$intra_days
-
 
 
 
