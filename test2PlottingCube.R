@@ -1,3 +1,10 @@
+# testing cuve ploting
+
+require( rgl )      # for 3 d graphics
+require( rimage )   # to import jpeg files
+require(scatterplot3d)
+
+
 
 ordered_times = intra_times[with(intra_times, order(row_number)), ]
 input_value_times = as.integer(input$intra_times)
@@ -43,22 +50,30 @@ getDiscoverabilityForUsers <- function(intra_category, input_row_number, input_u
 	return (discoverability_array)
 }
 
-
+input_row_number_times = 0 
+userID_times = 0 
+discoverability_times = 0
 input_row_number_times = as.integer(input$intra_times)
 userID_times = as.integer(output$intra_times)
 discoverability_times = getDiscoverabilityForUsers(intra_times, input_row_number_times, userID_times)
 
-
+input_row_number_days = 0 
+userID_days = 0 
+discoverability_days = 0
 input_row_number_days = as.integer(input$intra_days)
 userID_days = as.integer(output$intra_days)
 discoverability_days = getDiscoverabilityForUsers(intra_days, input_row_number_days, userID_days)
 
-
+input_row_number_months = 0 
+userID_months = 0 
+discoverability_months = 0
 input_row_number_months = as.integer(input$intra_months)
 userID_months = as.integer(output$intra_months)
 discoverability_months = getDiscoverabilityForUsers(intra_months, input_row_number_months, userID_months)
 
-
+input_row_number_locations = 0 
+userID_locations = 0 
+discoverability_locations = 0
 input_row_number_locations = as.integer(input$intra_locations)
 userID_locations = as.integer(output$intra_locations)
 discoverability_locations = getDiscoverabilityForUsers(intra_locations, input_row_number_locations, userID_locations)
@@ -98,7 +113,6 @@ getXArrayAxis <- function(discoverabilityArray, startingIndex){
 		}
 	}
 } # end function
-
 xArrayAxis <<- c(0)
 getXArrayAxis(discoverability_times,1)
 getXArrayAxis(discoverability_days, length(discoverability_times) + 1)
@@ -125,11 +139,34 @@ getYArrayAxis(userID_locations, length(userID_months) + 1)
 
 
 
+zArrayAxis <<-c(0)
 
+for (index in 1:(sum(lengthArrayOfEachCategoryOFTheUsers_ID))){
 
+	if (index == 1){
+			zArrayAxis[index] = input_row_number_times
+	}
+	else{
+		if (index == lengthArrayOfEachCategoryOFTheUsers_ID[1]){
+			zArrayAxis[index] = input_row_number_days * 1.5
+		}
+		else{
+			if (index == lengthArrayOfEachCategoryOFTheUsers_ID[2] + lengthArrayOfEachCategoryOFTheUsers_ID[1]){
+				zArrayAxis[index] = input_row_number_months * 2
+			}
+			else{
+				if (index == lengthArrayOfEachCategoryOFTheUsers_ID[3] + lengthArrayOfEachCategoryOFTheUsers_ID[2] + lengthArrayOfEachCategoryOFTheUsers_ID[1]){
+					zArrayAxis[index] = input_row_number_locations * 0.2
+				}
+				else{
+					zArrayAxis[index] = zArrayAxis[index - 1] + 0.01
+				}
+			}
+		}
+	}
+}  # for  
 
-
-
+plot3d(xArrayAxis, yArrayAxis, zArrayAxis , size=4, col = rainbow(sum(lengthArrayOfEachCategoryOFTheUsers_ID)))
 
 
 
