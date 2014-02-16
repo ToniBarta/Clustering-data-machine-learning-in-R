@@ -32,22 +32,25 @@ userID_times = as.integer(output$intra_times)
 
 
 getDiscoverabilityForUsers <- function(intra_category, input_row_number, input_users){
+  
+  if (input_users != 0){
+		matrix3DOfValues = getInfoBasedOnVariables(intra_category)
+		discoverability_array = c(0)
 
-	matrix3DOfValues = getInfoBasedOnVariables(intra_category)
-	discoverability_array = c(0)
+		discIndex = 1
+		for (count in 1:(nrow(matrix3DOfValues[input_row_number, , ]))){
 
-	discIndex = 1
-	for (count in 1:(nrow(matrix3DOfValues[input_row_number, , ]))){
+			for (i in 1:(length(input_users))){
 
-		for (i in 1:(length(input_users))){
-
-			if (matrix3DOfValues[input_row_number, count, 1] == input_users[i]){
-				discoverability_array[discIndex] = matrix3DOfValues[input_row_number, count, 2]
-				discIndex = discIndex + 1
+				if (matrix3DOfValues[input_row_number, count, 1] == input_users[i]){
+					discoverability_array[discIndex] = matrix3DOfValues[input_row_number, count, 2]
+					discIndex = discIndex + 1
+				}
 			}
 		}
+		return (discoverability_array)
 	}
-	return (discoverability_array)
+	return (0)
 }
 
 input_row_number_times = 0 
@@ -116,8 +119,8 @@ getXArrayAxis <- function(discoverabilityArray, startingIndex){
 xArrayAxis <<- c(0)
 getXArrayAxis(discoverability_times,1)
 getXArrayAxis(discoverability_days, length(discoverability_times) + 1)
-getXArrayAxis(discoverability_months, length(discoverability_days) + 1)
-getXArrayAxis(discoverability_locations, length(discoverability_months) + 1)
+getXArrayAxis(discoverability_months, length(discoverability_times) + length(discoverability_days) + 1)
+getXArrayAxis(discoverability_locations, length(discoverability_times) + length(discoverability_days) +length(discoverability_months) + 1)
 
 
 
@@ -134,8 +137,8 @@ getYArrayAxis <- function(userIDArray, startingIndex){
 yArrayAxis <<- c(0)
 getYArrayAxis(userID_times,1)
 getYArrayAxis(userID_days, length(userID_times) + 1)
-getYArrayAxis(userID_months, length(userID_days) + 1)
-getYArrayAxis(userID_locations, length(userID_months) + 1)
+getYArrayAxis(userID_months, length(userID_times)  + length(userID_days) + 1)
+getYArrayAxis(userID_locations, length(userID_times)  + length(userID_days) + length(userID_months) + 1)
 
 
 
