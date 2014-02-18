@@ -13,7 +13,7 @@ kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start)
 
 getUsersFromTheSameCluster <- function(intra_matrix, intra_cluster){
   
-  cluster_user_matrix <- matrix(0, nrow(intra_matrix), max(intra_cluster$size)
+  cluster_user_matrix <- matrix(0, nrow(intra_matrix), max(intra_cluster$size))
   
   for ( i in 1:(nrow(intra_matrix))){
     j = 1
