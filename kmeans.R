@@ -1,9 +1,0 @@
-
-
-myarg <- commandArgs()
-
-print (myarg)
-
-
-
-

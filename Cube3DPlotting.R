@@ -5,6 +5,37 @@ require( rimage )   # to import jpeg files
 require(scatterplot3d)
 
 
+#  @@@@@@@@@@@@@ FUNCTION TO RETURN A 3d MATRIX BASED ON VARIABLE @@@@@@@@@@@@@@@@
+getInfoBasedOnVariables <- function(intra_matrix){
+  
+  ordered_intra = intra_matrix[with(intra_matrix, order(row_number)), ] 
+  j = 1
+  intra_3dMatrix = array(0, dim=c(max(ordered_intra$row_number),1000,2))
+  rowCount = ordered_intra$row_number[1]
+  
+  for (i in 1:(nrow(ordered_intra) - 1)){
+    if (ordered_intra$row_number[i] == ordered_intra$row_number[i+1]){
+      
+      intra_3dMatrix[ordered_intra$row_number[i], j, 1] = ordered_intra[["user_id"]][i]
+      intra_3dMatrix[ordered_intra$row_number[i], j, 2] = ordered_intra[["discoverability"]][i]	
+      j = j + 1
+    }
+    else{
+      intra_3dMatrix[ordered_intra$row_number[i], j, 1] = ordered_intra[["user_id"]][i]
+      intra_3dMatrix[ordered_intra$row_number[i], j, 2] = ordered_intra[["discoverability"]][i]	
+      rowCount = rowCount + 1
+      j = 1
+    }
+    if (i == (nrow(ordered_intra) - 1)){
+      intra_3dMatrix[ordered_intra$row_number[i],j,1] = ordered_intra[["user_id"]][i + 1]
+      intra_3dMatrix[ordered_intra$row_number[i],j,2] = ordered_intra[["discoverability"]][i + 1]
+    }
+  }	
+  return(intra_3dMatrix)
+}  
+#  @@@@@@@@@@@@@@@@@@@@@@@@@@ END OF FUNCTION @@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
 getDiscoverabilityForUsers <- function(intra_category, input_row_number, input_users){
   
   if (input_users != 0){
