@@ -10,7 +10,7 @@ getInfoBasedOnVariables <- function(intra_matrix){
   
   ordered_intra = intra_matrix[with(intra_matrix, order(row_number)), ] 
   j = 1
-  intra_3dMatrix = array(0, dim=c(max(ordered_intra$row_number),1000,2))
+  intra_3dMatrix = array(0, dim=c(max(ordered_intra$row_number),5000,2))
   rowCount = ordered_intra$row_number[1]
   
   for (i in 1:(nrow(ordered_intra) - 1)){
@@ -86,9 +86,11 @@ input_row_number_locations = as.integer(input$intra_locations)
 userID_locations = as.integer(output$intra_locations)
 discoverability_locations = getDiscoverabilityForUsers(intra_locations, input_row_number_locations, userID_locations)
 
-#needs testing 
-input_row_number_temperatures = as.integer(input$intra_temperature)
-userID_temperatures = as.integer(output$intra_temperature)
+input_row_number_temperatures = 0 
+userID_temperatures = 0 
+discoverability_temperatures = 0
+input_row_number_temperatures = as.integer(input$intra_temperatures)
+userID_temperatures = as.integer(output$intra_temperatures)
 discoverability_temperatures = getDiscoverabilityForUsers(intra_temperatures, input_row_number_temperatures, userID_temperatures)
 
 # input_row_number_weathers = as.integer(input$intra_weathers)
@@ -100,7 +102,7 @@ lengthArrayOfEachCategoryOFTheUsers_ID[1] = length(userID_times)
 lengthArrayOfEachCategoryOFTheUsers_ID[2] = length(userID_days)
 lengthArrayOfEachCategoryOFTheUsers_ID[3] = length(userID_months)
 lengthArrayOfEachCategoryOFTheUsers_ID[4] = length(userID_locations)
-
+lengthArrayOfEachCategoryOFTheUsers_ID[5] = length(userID_temperatures)
 
 
 
@@ -126,6 +128,7 @@ getXArrayAxis(discoverability_times,1)
 getXArrayAxis(discoverability_days, length(discoverability_times) + 1)
 getXArrayAxis(discoverability_months, length(discoverability_times) + length(discoverability_days) + 1)
 getXArrayAxis(discoverability_locations, length(discoverability_times) + length(discoverability_days) +length(discoverability_months) + 1)
+getXArrayAxis(discoverability_temperatures, length(discoverability_times) + length(discoverability_days) +length(discoverability_months) + length(discoverability_locations) + 1)
 length(xArrayAxis) <- length(xArrayAxis) - 1
 
 
@@ -157,6 +160,7 @@ getYArrayAxis(userID_times,1, 1)
 getYArrayAxis(userID_days, length(userID_times) + 1,  2)
 getYArrayAxis(userID_months, length(userID_times)  + length(userID_days) + 1,  3)
 getYArrayAxis(userID_locations, length(userID_times)  + length(userID_days) + length(userID_months) + 1,  4)
+getYArrayAxis(userID_temperatures, length(userID_times)  + length(userID_days) + length(userID_months) + length(userID_locations) + 1, 5)
 length(yArrayAxis) <- length(yArrayAxis) - 1
 length(variablesArray) <- length(variablesArray) - 1
 
@@ -180,7 +184,11 @@ for (index in 1:(sum(lengthArrayOfEachCategoryOFTheUsers_ID))){
 					zArrayAxis[index] = input_row_number_locations * 0.2
 				}
 				else{
-					zArrayAxis[index] = zArrayAxis[index - 1] + 0.01
+          if (index == lengthArrayOfEachCategoryOFTheUsers_ID[4] + lengthArrayOfEachCategoryOFTheUsers_ID[3] + lengthArrayOfEachCategoryOFTheUsers_ID[2] + lengthArrayOfEachCategoryOFTheUsers_ID[1] + 1){
+            zArrayAxis[index] = input_row_number_temperatures * 1.1
+          }
+          else
+					  zArrayAxis[index] = zArrayAxis[index - 1] + 0.01
 				}
 			}
 		}
@@ -198,7 +206,7 @@ tableMatrix = c( yArrayAxis, variablesArray, xArrayAxis , yArrayAxis, zArrayAxis
 dataTable <- matrix(tableMatrix, ncol = 5)
 colnames(dataTable) <- c("users", "variable", "x" , "y" , "z" )
 dataTable <- as.data.frame(dataTable, header = TRUE)
-dataTable
+
 
 colors =c("green","blue","red", "black") 
 p3d<- plot3d(dataTable$x, dataTable$y, dataTable$z, xlab=" discoverability ", ylab=" user number ", 
