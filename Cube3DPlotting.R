@@ -10,7 +10,7 @@ getInfoBasedOnVariables <- function(intra_matrix){
   
   ordered_intra = intra_matrix[with(intra_matrix, order(row_number)), ] 
   j = 1
-  intra_3dMatrix = array(0, dim=c(max(ordered_intra$row_number),5000,2))
+  intra_3dMatrix = array(0, dim=c(max(ordered_intra$row_number),length(unique(ordered_intra$user_id)),2))
   rowCount = ordered_intra$row_number[1]
   
   for (i in 1:(nrow(ordered_intra) - 1)){
@@ -173,7 +173,7 @@ for (index in 1:(sum(lengthArrayOfEachCategoryOFTheUsers_ID))){
 	}
 	else{
 		if (index == lengthArrayOfEachCategoryOFTheUsers_ID[1] + 1){
-			zArrayAxis[index] = input_row_number_days * 1.5
+			zArrayAxis[index] = input_row_number_days * 1.7
 		}
 		else{
 			if (index == lengthArrayOfEachCategoryOFTheUsers_ID[2] + lengthArrayOfEachCategoryOFTheUsers_ID[1] + 1){

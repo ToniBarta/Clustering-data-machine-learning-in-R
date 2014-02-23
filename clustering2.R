@@ -12,70 +12,35 @@ kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start)
 }  		
 
 
-getUsersFromTheSameCluster <- function(intra_matrix, intra_cluster){
-  
-  cluster_user_matrix <- matrix(0, nrow(intra_matrix), max(intra_cluster$size))
-  
-  for ( i in 1:(nrow(intra_matrix))){
-    j = 1
-    while (cluster_user_matrix[intra_cluster$cluster[i], j] != 0 )
-    {
-      j = j + 1
-    }
-    cluster_user_matrix[intra_cluster$cluster[i] , j] = intra_matrix[["user_id"]][i]
-  }
-  return (cluster_user_matrix)
-}
-
-
 gettingNeighboursForEachCategory <- function(input_variable, intra_cluster, intra_variable, index){
+
+  cluster_table = c()
+  neighbour_users = c(0)
+  for ( i in 1:(length(intra_cluster$size))) {
   
-  #&&&&&&&&&&& Getting the clusters of the variable &&&&&&&&&&&&&&
-  j = 1
-  clustersArray = c(0)
-  for ( i in 1: (nrow(intra_cluster[["centers"]]))){
-    if (input_variable == intra_cluster[["centers"]][i,2]){
-      clustersArray[j] = i
-      j = j + 1
+    cluster_table = intra_variable[intra_cluster$cluster== i , ]
+    
+    if (cluster_table$row_number[1] == as.integer(input_variable)){
+   
+      if ( any((cluster_table$user_id) == as.integer(input$user_id))){
+        neighbour_users = cluster_table$user_id
+        break
+      }
     }
   }
-  
-  # getting the users for each cluster
-  cluster_user_matrix = getUsersFromTheSameCluster(intra_variable, intra_cluster)
-  
-  # need to check if the user is in this clusters! 
-  # if it is => save all users from the cluster, if not => do nothing
-  neighbour_users = c(0)
-  
-  for ( i in 1: length(clustersArray)){
-    
-    users =  cluster_user_matrix[clustersArray[i], ]
-    # getting rid of extra 0's
-    users = users[users != 0]
-    
-    answer =  any(users == input$user_id)
-    if (answer == TRUE){
-      for (j in 1: length(users)){
-        neighbour_users[j] = users[j]
-      }
-      
-      for (z in 1: length(neighbour_users)){
-        if (index == 1)
-          output$intra_times[z] = neighbour_users[z]
-        else if (index == 2)
-          output$intra_days[z] = neighbour_users[z]
-        else if (index == 3)
-          output$intra_months[z] = neighbour_users[z]
-        else if (index == 4)
-          output$intra_locations[z] = neighbour_users[z]
-        else if (index == 5)
-          output$intra_temperatures[z] = neighbour_users[z]
-      }  
-      break
-    }	
-  }
-  #     print(neighbour_users)
-}
+
+   if (index == 1)
+     output$intra_times = neighbour_users
+   else if (index == 2)
+     output$intra_days = neighbour_users
+   else if (index == 3)
+     output$intra_months = neighbour_users
+   else if (index == 4)
+     output$intra_locations = neighbour_users
+   else if (index == 5)
+     output$intra_temperatures = neighbour_users
+       
+} 
 
 
 getNeighboursForAUser <- function(input){
@@ -97,7 +62,7 @@ getNeighboursForAUser <- function(input){
 
 
   if (nrow(intra_months) > 999)
-    intra_months_cluster = kmeansClustering(intra_months, (10 * max(intra_months$row_number)), 1500, 1 )
+    intra_months_cluster = kmeansClustering(intra_months, (10 * max(intra_months$row_number)), 1500, 1)
   else
     intra_months_cluster = kmeansClustering(intra_months, 30, 50 ,50)
   gettingNeighboursForEachCategory(input$intra_months, intra_months_cluster, intra_months, 3)

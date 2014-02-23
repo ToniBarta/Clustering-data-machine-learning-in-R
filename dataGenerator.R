@@ -1,7 +1,6 @@
 require(stats)
 
 
-
 user_id_intra_times <- sample(1:500, 1000, replace=T)
 row_number_intra_times <- sample(1:8, 1000, replace=T)
 discoverability_intra_times <- runif(1000, 0, 1)
@@ -73,8 +72,57 @@ generateData2 <- function(variable, number_of_users, total_number_of_elementes){
 }
 
 
-intra_times 	= generateData2(8, 500, 3500)
-intra_days 		= generateData2(7, 500, 3500)
-intra_months 	= generateData2(12, 500, 3500)
+intra_times 	= generateData2(8, 20000, 140000)
+intra_days 		= generateData2(7, 20000, 140000)
+intra_months 	= generateData2(12, 20000, 140000)
+
+intra_locations = generateData2(30, 20000, 140000)
+intra_temperatures = generateData2(35, 20000, 140000)
 
 
+
+
+
+
+number_of_users = 100
+total_number_of_elementes = 500
+
+
+total_number_of_elementes_XAxis = 0
+time_YAxis = 0
+
+for (i in 1:24){
+
+	# Start the clock!
+	ptm <- proc.time()  
+
+	intra_times 	= generateData2(8, number_of_users, total_number_of_elementes)
+	intra_days 		= generateData2(7, number_of_users, total_number_of_elementes)
+	intra_months 	= generateData2(12, number_of_users, total_number_of_elementes)
+
+	intra_locations = generateData2(30, number_of_users, total_number_of_elementes)
+	intra_temperatures = generateData2(35, number_of_users, total_number_of_elementes)
+
+	input = hash(user_id = user_id_input, intra_times = intra_times_input, intra_days = intra_days_input, 
+            intra_months = intra_months_input, intra_locations = intra_locations_input ,intra_temperatures = intra_temperature_input)
+
+
+	output = hash(user_id = input$user_id, intra_times = c(0), intra_days = c(0), 
+              intra_months = c(0), intra_locations = c(0),intra_temperatures = c(0))  
+
+	getNeighboursForAUser(input)
+
+
+	# Stop the clock
+	stopWatch = proc.time() - ptm
+
+	total_number_of_elementes_XAxis = c(total_number_of_elementes_XAxis, total_number_of_elementes)
+	time_YAxis = c(time_YAxis, stopWatch[3])
+
+	total_number_of_elementes = total_number_of_elementes + 1500
+	number_of_users = number_of_users + 300
+
+}
+
+
+plot(total_number_of_elementes_XAxis, time_YAxis, type = "l")
