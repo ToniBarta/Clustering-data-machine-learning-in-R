@@ -120,9 +120,32 @@ for (i in 1:24){
 	time_YAxis = c(time_YAxis, stopWatch[3])
 
 	total_number_of_elementes = total_number_of_elementes + 1500
-	number_of_users = number_of_users + 300
+	number_of_users = number_of_users + 350
 
 }
 
 
 plot(total_number_of_elementes_XAxis, time_YAxis, type = "l")
+
+par(new=T)
+
+plot(xA, yA, type = "l")
+
+xAxisSlowAlg = total_number_of_elementes_XAxis
+yAxisSlowAlg = time_YAxis
+
+
+plot(total_number_of_elementes_XAxis, time_YAxis, type='l', xlim=range(total_number_of_elementes_XAxis,xAxisSlowAlg), ylim=range(time_YAxis, yAxisSlowAlg), xlab='number of entries', ylab='time in seconds')
+points(xAxisSlowAlg, yAxisSlowAlg, type='l', col="red", xlab='number of entries', ylab='time in seconds')
+
+
+
+	x1=rnorm(25, mean=0, sd=1)
+> >  y1=dnorm(x1, mean=0, sd=1)
+> > 
+  > >  x2=rnorm(25, mean=0, sd=1)
+> >  y2=dnorm(x2, mean=0, sd=1)
+> >  plot(x1, y1, type='p', xlim=range(x1,x2), ylim=range(y1, y2), xlab='x',
+          > ylab='y')
+> >  points(x2, y2, type='p', col="red", xlab='x', ylab='y')
+
