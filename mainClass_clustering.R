@@ -15,7 +15,7 @@ location <- readline("Give the location: ")
 #	# if we write a citi that is not in the database we make the input 0
 #	if (dim (intra_locations_input) == 0) intra_locations_input = 0
 
-location <- sample(1:30, 1, replace=TRUE)
+location <- sample(1:50, 1, replace=TRUE)
 
 intra_temperature_input <- readline("Give the temperature: ")
 

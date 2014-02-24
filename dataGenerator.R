@@ -1,42 +1,42 @@
 require(stats)
 
 
-user_id_intra_times <- sample(1:500, 1000, replace=T)
-row_number_intra_times <- sample(1:8, 1000, replace=T)
-discoverability_intra_times <- runif(1000, 0, 1)
+# user_id_intra_times <- sample(1:500, 1000, replace=T)
+# row_number_intra_times <- sample(1:8, 1000, replace=T)
+# discoverability_intra_times <- runif(1000, 0, 1)
 
-dataMatrix_times = c( user_id_intra_times, row_number_intra_times, discoverability_intra_times) 
+# dataMatrix_times = c( user_id_intra_times, row_number_intra_times, discoverability_intra_times) 
 
-intra_times <- matrix(dataMatrix_times, ncol = 3)
-colnames(intra_times) <- c("user_id", "row_number", "discoverability")
-intra_times <-as.data.frame(intra_times, header=TRUE)
-
-
-generateData <- function(variable ,number_of_users, total_number_of_elementes){
-
-	dataMatrix = c(sample(1:number_of_users, total_number_of_elementes, replace=T), sample(1:variable, total_number_of_elementes, replace=T), runif(total_number_of_elementes, 0, 1))
-	intra_matrix <- matrix(dataMatrix, ncol = 3)
-	colnames(intra_matrix) <- c("user_id", "row_number", "discoverability")
-	intra_matrix <-as.data.frame(intra_matrix, header=TRUE)
-
-	return (intra_matrix)
-}
+# intra_times <- matrix(dataMatrix_times, ncol = 3)
+# colnames(intra_times) <- c("user_id", "row_number", "discoverability")
+# intra_times <-as.data.frame(intra_times, header=TRUE)
 
 
-intra_times 	= generateData(8, 600, 5000)
-intra_days 		= generateData(7, 600, 5000)
-intra_months 	= generateData(12, 600, 5000)
+# generateData <- function(variable ,number_of_users, total_number_of_elementes){
+
+# 	dataMatrix = c(sample(1:number_of_users, total_number_of_elementes, replace=T), sample(1:variable, total_number_of_elementes, replace=T), runif(total_number_of_elementes, 0, 1))
+# 	intra_matrix <- matrix(dataMatrix, ncol = 3)
+# 	colnames(intra_matrix) <- c("user_id", "row_number", "discoverability")
+# 	intra_matrix <-as.data.frame(intra_matrix, header=TRUE)
+
+# 	return (intra_matrix)
+# }
+
+
+# intra_times 	= generateData(8, 600, 5000)
+# intra_days 		= generateData(7, 600, 5000)
+# intra_months 	= generateData(12, 600, 5000)
 
 
 
-for (i in 1:5){
-	intra_times = sample(1:30, 20, replace=F)
-  if (i == 1)
-    dataMatrix = intra_times
-  else
-	  dataMatrix = c(dataMatrix, intra_times)
-}
-dataMatrix
+# for (i in 1:5){
+# 	intra_times = sample(1:30, 20, replace=F)
+#   if (i == 1)
+#     dataMatrix = intra_times
+#   else
+# 	  dataMatrix = c(dataMatrix, intra_times)
+# }
+# dataMatrix
 
 
 
@@ -72,12 +72,12 @@ generateData2 <- function(variable, number_of_users, total_number_of_elementes){
 }
 
 
-intra_times 	= generateData2(8, 20000, 140000)
-intra_days 		= generateData2(7, 20000, 140000)
-intra_months 	= generateData2(12, 20000, 140000)
+intra_times 	= generateData2(8, 72000, 500000)
+intra_days 		= generateData2(7, 72000, 500000)
+intra_months 	= generateData2(12, 72000, 500000)
 
-intra_locations = generateData2(30, 20000, 140000)
-intra_temperatures = generateData2(35, 20000, 140000)
+intra_locations = generateData2(30, 72000, 500000)
+intra_temperatures = generateData2(35, 72000, 500000)
 
 
 
@@ -87,11 +87,10 @@ intra_temperatures = generateData2(35, 20000, 140000)
 number_of_users = 100
 total_number_of_elementes = 500
 
-
 total_number_of_elementes_XAxis = 0
 time_YAxis = 0
 
-for (i in 1:24){
+for (i in 1:70){
 
 	# Start the clock!
 	ptm <- proc.time()  
@@ -119,33 +118,33 @@ for (i in 1:24){
 	total_number_of_elementes_XAxis = c(total_number_of_elementes_XAxis, total_number_of_elementes)
 	time_YAxis = c(time_YAxis, stopWatch[3])
 
-	total_number_of_elementes = total_number_of_elementes + 1500
-	number_of_users = number_of_users + 350
-
+	print (i)
+	print(total_number_of_elementes)
+	print(time_YAxis[i])
+  
+  
+	total_number_of_elementes = total_number_of_elementes + 2000
+	number_of_users = number_of_users + 400
 }
 
-
-plot(total_number_of_elementes_XAxis, time_YAxis, type = "l")
-
-par(new=T)
-
-plot(xA, yA, type = "l")
 
 xAxisSlowAlg = total_number_of_elementes_XAxis
 yAxisSlowAlg = time_YAxis
 
 
-plot(total_number_of_elementes_XAxis, time_YAxis, type='l', xlim=range(total_number_of_elementes_XAxis,xAxisSlowAlg), ylim=range(time_YAxis, yAxisSlowAlg), xlab='number of entries', ylab='time in seconds')
+plot(main = 'Computing the neighbours of a user',col="blue", total_number_of_elementes_XAxis, time_YAxis, type='l', 
+     xlim=range(total_number_of_elementes_XAxis,xAxisSlowAlg), ylim=range(time_YAxis, yAxisSlowAlg), 
+     xlab='number of entries', ylab='time in seconds')
+
 points(xAxisSlowAlg, yAxisSlowAlg, type='l', col="red", xlab='number of entries', ylab='time in seconds')
 
 
 
-	x1=rnorm(25, mean=0, sd=1)
-> >  y1=dnorm(x1, mean=0, sd=1)
-> > 
-  > >  x2=rnorm(25, mean=0, sd=1)
-> >  y2=dnorm(x2, mean=0, sd=1)
-> >  plot(x1, y1, type='p', xlim=range(x1,x2), ylim=range(y1, y2), xlab='x',
-          > ylab='y')
-> >  points(x2, y2, type='p', col="red", xlab='x', ylab='y')
+# plot(main = 'Computing the neighbours of a user',col="blue", total_number_of_elementes_XAxis, time_YAxis, type='b', pch=21, lty=3,
+#      xlim=range(total_number_of_elementes_XAxis,xAxisSlowAlg), ylim=range(time_YAxis, yAxisSlowAlg), 
+#      xlab='number of entries', ylab='time in seconds')
+# 
+# lines(total_number_of_elementes_XAxis, time_YAxis, type="b", pch=22, col="blue", lty=2)
+# 
+# points(xAxisSlowAlg, yAxisSlowAlg, type='p', col="red", xlab='number of entries', ylab='time in seconds')
 
