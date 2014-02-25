@@ -30,7 +30,7 @@ getUsersFromTheSameCluster <- function(intra_matrix, intra_cluster){
 
 gettingNeighboursForEachCategory <- function(input_variable, intra_cluster, intra_variable, index){
   
-  #&&&&&&&&&&& Getting the clusters of the variable &&&&&&&&&&&&&&
+  #&&&&&&&&&&&Getting the clusters of the variable &&&&&&&&&&&&&&
   j = 1
   clustersArray = c(0)
   for ( i in 1: (nrow(intra_cluster[["centers"]]))){
@@ -58,7 +58,6 @@ gettingNeighboursForEachCategory <- function(input_variable, intra_cluster, intr
       for (j in 1: length(users)){
         neighbour_users[j] = users[j]
       }
-      
       for (z in 1: length(neighbour_users)){
         if (index == 1)
           output$intra_times[z] = neighbour_users[z]
@@ -81,37 +80,35 @@ gettingNeighboursForEachCategory <- function(input_variable, intra_cluster, intr
 getNeighboursForAUser <- function(input){
   
   if (nrow(intra_times) > 999)
-    intra_times_cluster = kmeansClustering(intra_times, (10 * max(intra_times$row_number)), 1500, 1)
+    intra_times_cluster = kmeansClustering(intra_times, (10 * max(intra_times$row_number)), 500, (2 * (10 * max(intra_times$row_number))) )
   else
     intra_times_cluster = kmeansClustering(intra_times, 24, 50, 50)   
   gettingNeighboursForEachCategory(input$intra_times, intra_times_cluster, intra_times, 1)
   
   
-  if (nrow(intra_days) > 999){
-    intra_days_cluster = kmeansClustering(intra_days, (10 * max(intra_days$row_number)), 1500, 1)
-  }
-  else{
+  if (nrow(intra_days) > 999)
+    intra_days_cluster = kmeansClustering(intra_days, (10 * max(intra_days$row_number)), 500, (2 * (10 * max(intra_days$row_number))) )
+  else
     intra_days_cluster = kmeansClustering(intra_days, 14, 50, 50)
-  }
   gettingNeighboursForEachCategory(input$intra_days, intra_days_cluster, intra_days, 2)	
 
 
   if (nrow(intra_months) > 999)
-    intra_months_cluster = kmeansClustering(intra_months, (10 * max(intra_months$row_number)), 1500, 1 )
+    intra_months_cluster = kmeansClustering(intra_months, (10 * max(intra_months$row_number)), 500, (2 * (10 * max(intra_months$row_number))) )
   else
     intra_months_cluster = kmeansClustering(intra_months, 30, 50 ,50)
   gettingNeighboursForEachCategory(input$intra_months, intra_months_cluster, intra_months, 3)
   
 
   if (nrow(intra_locations) > 999)
-    intra_locations_cluster = kmeansClustering(intra_locations, (10 * max(intra_locations$row_number)), 1500, 1 )
+    intra_locations_cluster = kmeansClustering(intra_locations, (10 * max(intra_locations$row_number)), 500, 1 )
   else
     intra_locations_cluster = kmeansClustering(intra_locations, 250, 50, 50)
   gettingNeighboursForEachCategory(input$intra_locations, intra_locations_cluster, intra_locations, 4)
   
 
    if (nrow(intra_temperatures) > 999)
-    intra_temperatures_cluster = kmeansClustering(intra_temperatures, (10 * max(intra_temperatures$row_number)), 1500, 1 )
+    intra_temperatures_cluster = kmeansClustering(intra_temperatures, (10 * max(intra_temperatures$row_number)), 500, 1 )
   else
     intra_temperatures_cluster = kmeansClustering(intra_temperatures, 75, 50, 50)
   gettingNeighboursForEachCategory(input$intra_temperatures, intra_temperatures_cluster, intra_temperatures, 5)
