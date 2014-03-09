@@ -71,14 +71,15 @@ generateData2 <- function(variable, number_of_users, total_number_of_elementes){
 	return (intra_matrix)
 }
 
+total_number_of_elementes = 5000
 
-intra_times 	= generateData2(8, 72000, 500000)
-intra_days 		= generateData2(7, 72000, 500000)
-intra_months 	= generateData2(12, 72000, 500000)
+intra_times 	= generateData2(8, ceiling(total_number_of_elementes / 7), total_number_of_elementes)
+intra_days 		= generateData2(7, ceiling(total_number_of_elementes / 7), total_number_of_elementes)
+intra_months 	= generateData2(12, ceiling(total_number_of_elementes / 7), total_number_of_elementes)
 
-intra_locations = generateData2(30, 72000, 500000)
-intra_temperatures = generateData2(35, 72000, 500000)
-
+intra_locations = generateData2(30, ceiling(total_number_of_elementes / 7), total_number_of_elementes)
+intra_temperatures = generateData2(35, ceiling(total_number_of_elementes / 7), total_number_of_elementes)
+intra_weathers = generateData2(40, ceiling(total_number_of_elementes/ 7), total_number_of_elementes)
 
 
 
@@ -147,4 +148,12 @@ points(xAxisSlowAlg, yAxisSlowAlg, type='l', col="red", xlab='number of entries'
 # lines(total_number_of_elementes_XAxis, time_YAxis, type="b", pch=22, col="blue", lty=2)
 # 
 # points(xAxisSlowAlg, yAxisSlowAlg, type='p', col="red", xlab='number of entries', ylab='time in seconds')
+
+
+
+
+
+
+
+
 

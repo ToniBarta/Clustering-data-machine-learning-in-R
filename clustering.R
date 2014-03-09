@@ -69,6 +69,8 @@ gettingNeighboursForEachCategory <- function(input_variable, intra_cluster, intr
           output$intra_locations[z] = neighbour_users[z]
         else if (index == 5)
           output$intra_temperatures[z] = neighbour_users[z]
+        else if (index == 6)
+          output$intra_weathers[z] = neighbour_users[z]
       }  
       break
     }	
@@ -113,5 +115,14 @@ getNeighboursForAUser <- function(input){
     intra_temperatures_cluster = kmeansClustering(intra_temperatures, 75, 50, 50)
   gettingNeighboursForEachCategory(input$intra_temperatures, intra_temperatures_cluster, intra_temperatures, 5)
   
+
+  #  if (nrow(intra_weathers) > 999)
+  #   intra_weathers_cluster = kmeansClustering(intra_weathers, (10 * max(intra_weathers$row_number)), 500, 1 )
+  # else
+  #   intra_weathers_cluster = kmeansClustering(intra_weathers, 75, 50, 50)
+  # gettingNeighboursForEachCategory(input$intra_weathers, intra_weathers_cluster, intra_weathers, 6)
+  
+
+
 }  # END OF getNeighboursForAUser
 

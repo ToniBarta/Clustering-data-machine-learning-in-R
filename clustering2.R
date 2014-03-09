@@ -4,9 +4,9 @@ kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start)
   cl <- kmeans(da, nr_clusters, iter.max = nr_iterations, nstart = nr_start)
   
   ##pdf('intra_temperature_cluster')  
-  #plot(da, col=cl$cluster)
-  #require(graphics)
-  #points(cl$centers, col = 1:150, pch = 8)
+  plot(da, col=cl$cluster)
+  require(graphics)
+  points(cl$centers, col = 1:150, pch = 8)
   ##dev.off()
   return(cl)
 }  		
@@ -39,6 +39,8 @@ gettingNeighboursForEachCategory <- function(input_variable, intra_cluster, intr
      output$intra_locations = neighbour_users
    else if (index == 5)
      output$intra_temperatures = neighbour_users
+   else if (index == 6)
+      output$intra_weathers = neighbour_users
        
 } 
 
@@ -81,5 +83,12 @@ getNeighboursForAUser <- function(input){
     intra_temperatures_cluster = kmeansClustering(intra_temperatures, 75, 50, 50)
   gettingNeighboursForEachCategory(input$intra_temperatures, intra_temperatures_cluster, intra_temperatures, 5)
   
+
+  if (nrow(intra_weathers) > 999)
+    intra_weathers_cluster = kmeansClustering(intra_weathers, (10 * max(intra_weathers$row_number)), 1500, 1 )
+  else
+    intra_weathers_cluster = kmeansClustering(intra_weathers, 30, 50, 1)
+  gettingNeighboursForEachCategory(input$intra_weathers, intra_weathers_cluster, intra_weathers, 6)
+
 }  # END OF getNeighboursForAUser
 

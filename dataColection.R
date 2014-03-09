@@ -92,4 +92,6 @@ intra_temperatures = dbGetQuery(con, "SELECT DISTINCT iw.user_id, w.row_number,
 
 plot(intra_temperatures[3:2])
 
+
+dbDisconnect(con)
 ###### -----------------------END OF GETTING THE DATA ---------------------------------------------- ######
