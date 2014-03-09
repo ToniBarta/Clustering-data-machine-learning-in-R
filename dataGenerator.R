@@ -84,7 +84,7 @@ intra_weathers = generateData2(40, ceiling(total_number_of_elementes/ 7), total_
 
 
 
-
+############### TESTING COMPLEXITY OF THE ALGORITHM BEGIN #####################
 number_of_users = 100
 total_number_of_elementes = 500
 
@@ -139,7 +139,7 @@ plot(main = 'Computing the neighbours of a user',col="blue", total_number_of_ele
 
 points(xAxisSlowAlg, yAxisSlowAlg, type='l', col="red", xlab='number of entries', ylab='time in seconds')
 
-
+############### TESTING COMPLEXITY OF THE ALGORITHM END #####################
 
 # plot(main = 'Computing the neighbours of a user',col="blue", total_number_of_elementes_XAxis, time_YAxis, type='b', pch=21, lty=3,
 #      xlim=range(total_number_of_elementes_XAxis,xAxisSlowAlg), ylim=range(time_YAxis, yAxisSlowAlg), 

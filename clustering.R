@@ -1,10 +1,10 @@
 
 kmeansClustering <- function(intra_matrix, nr_clusters, nr_iterations, nr_start){
-  da <- intra_matrix[3:2]
-  cl <- kmeans(da, nr_clusters, iter.max = nr_iterations, nstart = nr_start)
+  tempMatrix <- intra_matrix[3:2]
+  cl <- kmeans(tempMatrix, nr_clusters, iter.max = nr_iterations, nstart = nr_start)
   
   #pdf('intra_temperature_cluster')  
-  plot(da, col=cl$cluster)
+  plot(tempMatrix, col=cl$cluster)
   require(graphics)
   points(cl$centers, col = 1:150, pch = 8)
   #dev.off()
